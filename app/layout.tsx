@@ -3,6 +3,8 @@ import type { Metadata } from 'next'
 import { Viewport } from 'next/dist/lib/metadata/types/extra-types'
 import { Inter } from 'next/font/google'
 
+import ToastProvider from '@/components/ToastProvider'
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -33,7 +35,12 @@ export default function RootLayout({
           content="black-translucent"
         />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+         <ToastProvider>
+
+        {children}
+         </ToastProvider>
+        </body>
     </html>
   )
 }

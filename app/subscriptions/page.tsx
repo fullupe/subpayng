@@ -10,6 +10,7 @@ import SubscriptionList from '@/components/subscriptions/SubscriptionList'
 import { useAuth } from '@/lib/auth'
 import { supabase, Decoder, Subscription } from '@/lib/supabase'
 import { Plus, LogOut, User } from 'lucide-react'
+import { useToast } from '@/hooks/useToast'
 
 export default function SubscriptionsPage() {
   const { user, profile, signOut } = useAuth()
@@ -21,6 +22,8 @@ export default function SubscriptionsPage() {
   const [showPayment, setShowPayment] = useState(false)
   const [selectedDecoder, setSelectedDecoder] = useState<Decoder | null>(null)
   const [subscriptionData, setSubscriptionData] = useState<any>(null)
+
+    const toast = useToast()
 
   useEffect(() => {
     if (user) {
@@ -96,10 +99,14 @@ export default function SubscriptionsPage() {
       setSelectedDecoder(null)
       setSubscriptionData(null)
       loadData()
-      alert('Subscription request submitted successfully!')
+      //alert('Subscription request submitted successfully!')
+       toast.success('subscriptions added successfully!')
+
     } catch (error) {
       console.error('Error submitting subscription:', error)
-      alert('Error submitting subscription. Please try again.')
+      //alert('Error submitting subscription. Please try again.')
+
+       toast.error('Error adding subscriptions. Please try again.')
     }
   }
 

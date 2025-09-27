@@ -20,7 +20,8 @@ export type Decoder = {
   user_id: string
   name: string
   number: string
-  type: 'DSTV' | 'GoTv' | 'SLTv'
+  type: 'DSTV' | 'SLTv'
+  //type: 'DSTV' | 'GoTv' | 'SLTv'
   created_at: string
 }
 
@@ -30,7 +31,8 @@ export type Subscription = {
   decoder_id: string
   name: string
   card_number: string
-  subscription_type: 'DSTV' | 'GoTv' | 'SLTv'
+  subscription_type: 'DSTV' | 'SLTv'
+  //subscription_type: 'DSTV' | 'GoTv' | 'SLTv'
   package: string
   duration: string
   amount_paid: number

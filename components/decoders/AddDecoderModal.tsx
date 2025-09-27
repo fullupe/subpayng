@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Modal from '@/components/ui/Modal'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth'
+import { useToast } from '@/hooks/useToast'
 
 interface AddDecoderModalProps {
   isOpen: boolean
@@ -20,6 +21,7 @@ interface FormData {
 }
 
 export default function AddDecoderModal({ isOpen, onClose, onSuccess }: AddDecoderModalProps) {
+    const toast = useToast()
   const { user } = useAuth()
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState<FormData>({
@@ -48,11 +50,12 @@ export default function AddDecoderModal({ isOpen, onClose, onSuccess }: AddDecod
       if (error) throw error
 
       setFormData({ name: '', number: '', type: 'DSTV' })
+       toast.success('Decoder added successfully!')
       onSuccess()
       onClose()
     } catch (error) {
       console.error('Error adding decoder:', error)
-      alert('Error adding decoder. Please try again.')
+       toast.error('Error adding decoder. Please try again.')
     } finally {
       setLoading(false)
     }

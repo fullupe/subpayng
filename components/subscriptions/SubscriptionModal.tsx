@@ -46,6 +46,7 @@ export default function SubscriptionModal({ isOpen, onClose, decoder, onSubmit }
 
   if (!decoder) return null
 
+  //@ts-ignore
   const packages = PACKAGES[decoder.type]
   //@ts-ignore
   const packagePrice = selectedPackage ? packages[selectedPackage as keyof typeof packages]?.price || 0 : 0
@@ -64,9 +65,6 @@ export default function SubscriptionModal({ isOpen, onClose, decoder, onSubmit }
   }
 
  
-
-
-
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Subscribe to Package">
@@ -101,7 +99,8 @@ export default function SubscriptionModal({ isOpen, onClose, decoder, onSubmit }
                       : 'border-gray-200 hover:border-gray-300'
                   }`}>
                     <div className="font-semibold text-gray-900">{name}</div>
-                    <div className="text-sm text-gray-600">GHS {Math.round(info.price/Number(rates))}/month</div>
+                                                                            
+                    <div className="text-sm text-gray-600">GHS {Math.round(info?.price/Number(rates))}/month</div>
                   </div>
                 </label>
               ))}
