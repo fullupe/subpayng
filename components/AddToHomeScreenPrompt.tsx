@@ -1,35 +1,33 @@
-// components/AddToHomeScreenPrompt.tsx
+// components/AddToHomeScreen.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
 import { X, Download, Smartphone } from 'lucide-react'
 
-export default function AddToHomeScreenPrompt() {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
+export default function AddToHomeScreen() {
   const [showPrompt, setShowPrompt] = useState(false)
   const [isIOS, setIsIOS] = useState(false)
-  const [isStandalone, setIsStandalone] = useState(false)
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
 
   useEffect(() => {
-    // Check if app is already installed
+    // Check if already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
-      setIsStandalone(true)
       return
     }
 
-    // Check if iOS
-    const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase())
-    setIsIOS(isIos)
+    // Check iOS
+    const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
+    setIsIOS(ios)
 
-    // Listen for beforeinstallprompt event
+    // Handle install prompt
     const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault()
       setDeferredPrompt(e)
       
-      // Show prompt after 3 seconds if not dismissed before
-      const hasDismissed = localStorage.getItem('a2hs-dismissed')
-      if (!hasDismissed) {
-        setTimeout(() => setShowPrompt(true), 3000)
+      // Show prompt after delay if not dismissed
+      const dismissed = localStorage.getItem('a2hs-dismissed')
+      if (!dismissed) {
+        setTimeout(() => setShowPrompt(true), 5000)
       }
     }
 
@@ -40,7 +38,7 @@ export default function AddToHomeScreenPrompt() {
     }
   }, [])
 
-  const handleInstallClick = async () => {
+  const handleInstall = async () => {
     if (deferredPrompt) {
       deferredPrompt.prompt()
       const { outcome } = await deferredPrompt.userChoice
@@ -56,9 +54,7 @@ export default function AddToHomeScreenPrompt() {
     localStorage.setItem('a2hs-dismissed', 'true')
   }
 
-  if (isStandalone || !showPrompt) {
-    return null
-  }
+  if (!showPrompt) return null
 
   return (
     <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-sm bg-white border border-gray-200 rounded-xl shadow-lg z-50 animate-in slide-in-from-bottom duration-300">
@@ -68,28 +64,25 @@ export default function AddToHomeScreenPrompt() {
             <div className="bg-blue-100 p-2 rounded-lg">
               <Smartphone className="w-6 h-6 text-blue-600" />
             </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-gray-900">Install ShopMe App</h3>
+            <div>
+              <h3 className="font-semibold text-gray-900">Install SubPayNg</h3>
               <p className="text-sm text-gray-600 mt-1">
                 {isIOS 
-                  ? 'Tap the share button and "Add to Home Screen"'
-                  : 'Install our app for a better experience'
+                  ? 'Add to Home Screen for better experience'
+                  : 'Install app for quick access'
                 }
               </p>
             </div>
           </div>
-          <button
-            onClick={handleDismiss}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
+          <button onClick={handleDismiss} className="text-gray-400 hover:text-gray-600">
             <X className="w-5 h-5" />
           </button>
         </div>
         
-        {!isIOS && deferredPrompt && (
+        {!isIOS && (
           <button
-            onClick={handleInstallClick}
-            className="w-full mt-3 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+            onClick={handleInstall}
+            className="w-full mt-3 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2"
           >
             <Download className="w-4 h-4" />
             Install App
@@ -97,8 +90,8 @@ export default function AddToHomeScreenPrompt() {
         )}
         
         {isIOS && (
-          <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <p className="text-xs text-yellow-800">
+          <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-xs text-blue-800 text-center">
               📱 Tap <span className="font-bold">Share</span> → <span className="font-bold">Add to Home Screen</span>
             </p>
           </div>

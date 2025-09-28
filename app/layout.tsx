@@ -1,3 +1,5 @@
+
+
 import './globals.css'
 import type { Metadata, Viewport } from 'next'
 //import { Viewport } from 'next/dist/lib/metadata/types/extra-types'
@@ -6,6 +8,9 @@ import { Inter } from 'next/font/google'
 
 import ToastProvider from '@/components/ToastProvider'
 import AddToHomeScreenPrompt from '@/components/AddToHomeScreenPrompt'
+import { useEffect } from 'react'
+import ServiceWorkerRegistrar from '@/components/ServiceWorkerRegistrar'
+import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,6 +30,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+
+
   return (
     <html lang="en" >
        <head>
@@ -38,11 +45,13 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className} >
+          <ServiceWorkerRegistrar/>
          <ToastProvider>
 
         {children}
          <AddToHomeScreenPrompt />
          </ToastProvider>
+          <WhatsAppFloatingButton />
         </body>
     </html>
   )
