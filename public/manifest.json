@@ -1,6 +1,12 @@
 {
   "display": "standalone",
   "short_name": "SubPayNg",
+   "background_color": "#ffffff",
+   "description": "Manage your DSTV subscriptions easily",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
   "icons": [
     {
       "src": "public/manifest-icon-192.maskable.png",

@@ -19,6 +19,24 @@ export default function LoginPage() {
     }
   }, [user, profile, router])
 
+
+  useEffect(() => {
+    if (user) {
+      // Show A2HS prompt after successful signup
+      const timer = setTimeout(() => {
+        const event = new Event('showA2HSPrompt')
+        window.dispatchEvent(event)
+      }, 2000)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [user])
+
+  //return null
+
+
+
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
