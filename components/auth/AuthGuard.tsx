@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth'
 
@@ -12,25 +12,35 @@ interface AuthGuardProps {
 export default function AuthGuard({ children, requireAdmin = false }: AuthGuardProps) {
   const { user, profile, loading } = useAuth()
   const router = useRouter()
+  const [isAuthorized, setIsAuthorized] = useState(false)
 
   useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        router.push('/login')
-        return
-      }
+    if (loading) return
 
-      if (profile) {
-        if (requireAdmin && profile.role !== 'admin') {
-          router.push('/subscriptions')
-          return
-        }
-        if (!requireAdmin && profile.role === 'admin') {
-          router.push('/dashboard')
-          return
-        }
-      }
+    // User not authenticated
+    if (!user) {
+      router.push('/login')
+      return
     }
+
+    // User authenticated but profile not loaded yet
+    if (!profile) {
+      return
+    }
+
+    // Check authorization
+    if (requireAdmin && profile.role !== 'admin') {
+      router.push('/subscriptions')
+      return
+    }
+
+    if (!requireAdmin && profile.role === 'admin') {
+      router.push('/dashboard')
+      return
+    }
+
+    // All checks passed - user is authorized
+    setIsAuthorized(true)
   }, [user, profile, loading, requireAdmin, router])
 
   if (loading) {
@@ -44,15 +54,7 @@ export default function AuthGuard({ children, requireAdmin = false }: AuthGuardP
     )
   }
 
-  if (!user || !profile) {
-    return null
-  }
-
-  if (requireAdmin && profile.role !== 'admin') {
-    return null
-  }
-
-  if (!requireAdmin && profile.role === 'admin') {
+  if (!isAuthorized) {
     return null
   }
 

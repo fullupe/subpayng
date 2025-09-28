@@ -4,19 +4,14 @@ import { useState, useEffect } from 'react'
 import AuthGuard from '@/components/auth/AuthGuard'
 import { useAuth } from '@/lib/auth'
 import { supabase, Subscription } from '@/lib/supabase'
-import { LogOut, User, CircleCheck as CheckCircle, Clock, Tv, Users, DollarSign, TrendingUp } from 'lucide-react'
+import { LogOut, User, CircleCheck as CheckCircle, Clock, Tv, Users, DollarSign } from 'lucide-react'
 
 export default function DashboardPage() {
   const { profile, signOut } = useAuth()
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
   const [loading, setLoading] = useState(true)
-  const [stats, setStats] = useState({
-    total: 0,
-    pending: 0,
-    paid: 0,
-    revenue: 0
-  })
 
+  // Load data only when component is mounted (after auth is verified)
   useEffect(() => {
     loadSubscriptions()
   }, [])
@@ -33,21 +28,20 @@ export default function DashboardPage() {
         .order('created_at', { ascending: false })
 
       if (error) throw error
-
       setSubscriptions(data || [])
-      
-      // Calculate stats
-      const total = data?.length || 0
-      const pending = data?.filter(s => s.status === 'pending').length || 0
-      const paid = data?.filter(s => s.status === 'paid').length || 0
-      const revenue = data?.filter(s => s.status === 'paid').reduce((sum, s) => sum + Number(s.amount_paid), 0) || 0
-
-      setStats({ total, pending, paid, revenue })
     } catch (error) {
       console.error('Error loading subscriptions:', error)
     } finally {
       setLoading(false)
     }
+  }
+
+  // Calculate stats (memoize this in a real app)
+  const stats = {
+    total: subscriptions.length,
+    pending: subscriptions.filter(s => s.status === 'pending').length,
+    paid: subscriptions.filter(s => s.status === 'paid').length,
+    revenue: subscriptions.filter(s => s.status === 'paid').reduce((sum, s) => sum + Number(s.amount_paid), 0)
   }
 
   const updateSubscriptionStatus = async (id: string, status: 'pending' | 'paid') => {
@@ -58,23 +52,11 @@ export default function DashboardPage() {
         .eq('id', id)
 
       if (error) throw error
-      
-      loadSubscriptions()
+      loadSubscriptions() // Reload data
     } catch (error) {
       console.error('Error updating subscription:', error)
       alert('Error updating subscription status')
     }
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading dashboard...</p>
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -108,7 +90,14 @@ export default function DashboardPage() {
         </header>
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Stats Cards */}
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading subscriptions...</p>
+            </div>
+          ) : (
+            <>
+               {/* Stats Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div className="bg-white rounded-xl shadow-sm p-6">
               <div className="flex items-center justify-between">
@@ -258,6 +247,9 @@ export default function DashboardPage() {
               </div>
             )}
           </div>
+
+            </>
+          )}
         </main>
       </div>
     </AuthGuard>

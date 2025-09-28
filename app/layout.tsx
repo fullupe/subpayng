@@ -1,6 +1,7 @@
 import './globals.css'
-import type { Metadata } from 'next'
-import { Viewport } from 'next/dist/lib/metadata/types/extra-types'
+import type { Metadata, Viewport } from 'next'
+//import { Viewport } from 'next/dist/lib/metadata/types/extra-types'
+
 import { Inter } from 'next/font/google'
 
 import ToastProvider from '@/components/ToastProvider'
@@ -24,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" >
        <head>
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" type="image/png" sizes="196x196" href="/favicon-196.png"/>
@@ -35,7 +36,7 @@ export default function RootLayout({
           content="black-translucent"
         />
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} >
          <ToastProvider>
 
         {children}

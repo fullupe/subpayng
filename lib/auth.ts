@@ -10,21 +10,35 @@ export function useAuth() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        getOrCreateProfile(session.user)
-      } else {
-        setLoading(false)
+    let mounted = true
+
+    const initializeAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        if (!mounted) return
+
+        setUser(session?.user ?? null)
+        
+        if (session?.user) {
+          await getOrCreateProfile(session.user)
+        } else {
+          setLoading(false)
+        }
+      } catch (error) {
+        console.error('Error initializing auth:', error)
+        if (mounted) setLoading(false)
       }
-    })
+    }
+
+    initializeAuth()
 
     // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!mounted) return
+
       setUser(session?.user ?? null)
+      
       if (session?.user) {
         await getOrCreateProfile(session.user)
       } else {
@@ -33,19 +47,25 @@ export function useAuth() {
       }
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
   }, [])
 
   const getOrCreateProfile = async (user: User) => {
     try {
+      // First, try to get the profile
       let { data: profile, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single()
 
+      // If profile doesn't exist, create one
       if (error && error.code === 'PGRST116') {
-        // Profile doesn't exist, create one
+        console.log('Profile not found, creating new profile...')
+        
         const { data: newProfile, error: insertError } = await supabase
           .from('profiles')
           .insert([
@@ -60,16 +80,20 @@ export function useAuth() {
 
         if (insertError) {
           console.error('Error creating profile:', insertError)
-        } else {
-          profile = newProfile
+          throw insertError
         }
+
+        profile = newProfile
       } else if (error) {
         console.error('Error fetching profile:', error)
+        throw error
       }
 
       setProfile(profile)
     } catch (error) {
       console.error('Error in getOrCreateProfile:', error)
+      // Even if there's an error, we should set loading to false
+      setLoading(false)
     } finally {
       setLoading(false)
     }
