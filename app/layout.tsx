@@ -8,7 +8,7 @@ import { Inter } from 'next/font/google'
 
 import ToastProvider from '@/components/ToastProvider'
 import AddToHomeScreenPrompt from '@/components/AddToHomeScreenPrompt'
-import { useEffect } from 'react'
+
 import ServiceWorkerRegistrar from '@/components/ServiceWorkerRegistrar'
 import WhatsAppFloatingButton from '@/components/WhatsAppFloatingButton'
 
