@@ -7,7 +7,7 @@ import { useState } from 'react'
 export default function WhatsAppFloatingButton() {
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const phoneNumber = "233242261979" // Ghana number
+  const phoneNumber = "2348109016165" // Nigeria number
   const predefinedMessages = [
     { text: "Hello! I need help with my subscription", label: "General Help" },
     { text: "I have a payment issue", label: "Payment Issue" },
