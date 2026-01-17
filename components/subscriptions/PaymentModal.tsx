@@ -62,7 +62,31 @@ export default function PaymentModal({ isOpen, onClose, amount, onPaymentComplet
     <div className="flex items-start">
       <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">3</span>
       <p className="text-sm text-gray-700">
-        Select <span className="font-semibold">Option 1</span> (MoMo User)
+        Select <span className="font-semibold">Option 7</span> ()
+      </p>
+    </div>
+    <div className="flex items-start">
+      <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">3</span>
+      <p className="text-sm text-gray-700">
+        Select <span className="font-semibold">Option 2</span> (Onafriq)
+      </p>
+    </div>
+    <div className="flex items-start">
+      <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">3</span>
+      <p className="text-sm text-gray-700">
+        Select <span className="font-semibold">Option 2</span> (Transfer to wallet)
+      </p>
+    </div>
+    <div className="flex items-start">
+      <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">3</span>
+      <p className="text-sm text-gray-700">
+        Select <span className="font-semibold">Option 1</span> (Nigeria)
+      </p>
+    </div>
+    <div className="flex items-start">
+      <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">3</span>
+      <p className="text-sm text-gray-700">
+        Select <span className="font-semibold">Option 1</span> (MTN)
       </p>
     </div>
 
@@ -70,10 +94,10 @@ export default function PaymentModal({ isOpen, onClose, amount, onPaymentComplet
       <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-0.5 flex-shrink-0">4</span>
       <div>
         <p className="text-sm text-gray-700 font-semibold mb-1">
-          Enter This Number: <span className="font-mono text-red-600 bg-white px-2 py-1 rounded border">0242261979</span>
+          Enter This Number: <span className="font-mono text-red-600 bg-white px-2 py-1 rounded border">2348109016165</span>
         </p>
         <p className="text-xs text-red-600 font-medium bg-red-50 px-2 py-1 rounded">
-          ✅ Please confirm the number and name (<span className="font-bold">FORTUNE360</span>) before proceeding
+          ✅ Please confirm the number and name (<span className="font-bold">Isaac M</span>) before proceeding
         </p>
       </div>
     </div>
